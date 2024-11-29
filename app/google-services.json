@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "527201615280",
+    "project_id": "serpientes-105b4",
+    "storage_bucket": "serpientes-105b4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527201615280:android:ee312d1fa5f516ab95aa75",
+        "android_client_info": {
+          "package_name": "com.example.avance2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiRu93fx-Ke7gjrLVo1eoGeB8907dJD5Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
