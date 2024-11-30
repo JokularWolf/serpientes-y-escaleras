@@ -1,39 +1,37 @@
-// RegisterScreen.kt
-package com.example.avance2.composables
+// LoginScreen.kt
+package com.example.avance2.views.composables
 
-import EnumLogin
-import android.content.Intent
 import android.widget.Toast
-import com.example.avance2.R
-import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.avance2.R
 import com.google.firebase.auth.FirebaseAuth
 
-@Composable
-fun RegisterScreen(onRegistrationComplete: () -> Unit) {
-    val context = LocalContext.current  // Obtener el contexto
 
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+@Composable
+fun LoginScreen(
+    onLoginSuccess: () -> Unit = {},  // Callback para redirigir después del inicio exitoso
+    onRegisterClick: () -> Unit = {}  // Callback para la acción de "Registrarse"
+) {
+    val context = LocalContext.current  // Contexto para mostrar mensajes
 
     Box(
         modifier = Modifier
@@ -41,7 +39,7 @@ fun RegisterScreen(onRegistrationComplete: () -> Unit) {
             .background(Color(0xFF000428))
     ) {
         Image(
-            painter = painterResource(id = R.drawable.gimnasio),
+            painter = painterResource(id = R.drawable.login),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -54,10 +52,11 @@ fun RegisterScreen(onRegistrationComplete: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Registro", fontSize = 32.sp, color = Color.White)
+            Text("Iniciar sesión", fontSize = 32.sp, color = Color.White)
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            var username by remember { mutableStateOf("") }
             BasicTextField(
                 value = username,
                 onValueChange = { username = it },
@@ -74,6 +73,7 @@ fun RegisterScreen(onRegistrationComplete: () -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            var password by remember { mutableStateOf("") }
             BasicTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -89,30 +89,29 @@ fun RegisterScreen(onRegistrationComplete: () -> Unit) {
                 }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             Button(
                 onClick = {
                     if (username.isNotEmpty() && password.isNotEmpty()) {
                         FirebaseAuth.getInstance()
-                            .createUserWithEmailAndPassword(username, password)
+                            .signInWithEmailAndPassword(username, password)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     // Mostrar un mensaje de éxito
                                     Toast.makeText(
                                         context,
-                                        "Registro exitoso. Por favor inicia sesión.",
+                                        "Inicio de sesión exitoso",
                                         Toast.LENGTH_SHORT
                                     ).show()
 
-                                    // Llamar a la página inicial de login
-                                    onRegistrationComplete()
+                                    onLoginSuccess()  // Redirigir tras inicio exitoso
                                 } else {
                                     // Mostrar el error de Firebase
                                     val error = task.exception?.localizedMessage ?: "Error desconocido"
                                     Toast.makeText(
                                         context,
-                                        "Fallo al registrarse: $error",
+                                        "Error al iniciar sesión: $error",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -126,23 +125,29 @@ fun RegisterScreen(onRegistrationComplete: () -> Unit) {
                     .height(48.dp),
                 shape = RoundedCornerShape(24.dp)
             ) {
-                Text("Registrarse", color = Color.White)
+                Text("Ingresar", color = Color.White)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Texto de "Registrarse" con acción de onClick
             Text(
-                "¿Ya tienes cuenta? Inicia sesión",
+                text = "Registrarse",
                 color = Color.White,
                 fontSize = 16.sp,
-                modifier = Modifier.clickable { onRegistrationComplete() }
+                modifier = Modifier.clickable { onRegisterClick() }
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Opción de "¿Olvidó su contraseña?"
+            Text("¿Olvidó su contraseña?", color = Color.Gray, fontSize = 16.sp)
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewRegisterScreen() {
-    RegisterScreen(onRegistrationComplete = {})
+fun PreviewLoginScreen() {
+    LoginScreen()
 }

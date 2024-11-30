@@ -54,6 +54,18 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+
+    // Fragment
+    implementation ("androidx.fragment:fragment-ktx:1.3.2")
+    // Activity
+    implementation ("androidx.activity:activity-ktx:1.2.2")
+    // ViewModel
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+    // LiveData
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
+    implementation ("androidx.navigation:navigation-compose:2.7.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

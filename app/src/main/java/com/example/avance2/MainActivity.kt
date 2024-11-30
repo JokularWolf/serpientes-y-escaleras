@@ -10,10 +10,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.example.avance2.composables.HomeScreen
-import com.example.avance2.composables.LoginScreen
-import com.example.avance2.composables.RegisterScreen
+import com.example.avance2.views.composables.HomeScreen
+import com.example.avance2.views.composables.LoginScreen
+import com.example.avance2.views.composables.RegisterScreen
+import com.example.avance2.enums.EnumHome
 import com.example.avance2.ui.theme.Avance2Theme
+import com.example.avance2.views.composables.SnakeLaddersBoard
 import com.google.firebase.analytics.FirebaseAnalytics
 
 class MainActivity : ComponentActivity() {
@@ -34,22 +36,35 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppMainScreen() {
-    // Estado para controlar la pantalla actual usando EnumLogin
     var currentScreen by remember { mutableStateOf(EnumLogin.INGRESAR) }
+    val currentAction = remember { mutableStateOf(EnumHome.CREAR_PARTIDA) } // Cambiado a MutableState
 
     when (currentScreen) {
         EnumLogin.INGRESAR -> {
             LoginScreen(
-                onLoginSuccess = { currentScreen = EnumLogin.ACTUALIZAR }, // Cambia a HomeScreen al hacer clic en "Ingresar"
-                onRegisterClick = { currentScreen = EnumLogin.REGISTRAR } // Cambia a RegisterScreen al hacer clic en "Registrarse"
+                onLoginSuccess = { currentScreen = EnumLogin.ACTUALIZAR },
+                onRegisterClick = { currentScreen = EnumLogin.REGISTRAR }
             )
         }
         EnumLogin.ACTUALIZAR -> {
-            HomeScreen() // Mostrar HomeScreen cuando el usuario está logueado
+            HomeScreen(
+                currentAction = currentAction, // Pasa el estado mutable
+                onLocalGameClick = { currentAction.value = EnumHome.JUGAR_PARTIDA },
+                onCreateGameClick = { currentAction.value = EnumHome.CREAR_PARTIDA }
+            )
+            when (currentAction.value) {
+                EnumHome.CREAR_PARTIDA -> {
+
+                }
+                EnumHome.JUGAR_PARTIDA -> {
+                    SnakeLaddersBoard()
+                }
+                else -> {}
+            }
         }
         EnumLogin.REGISTRAR -> {
             RegisterScreen(
-                onRegistrationComplete = { currentScreen = EnumLogin.INGRESAR } // Vuelve a LoginScreen tras completar el registro
+                onRegistrationComplete = { currentScreen = EnumLogin.INGRESAR }
             )
         }
     }
